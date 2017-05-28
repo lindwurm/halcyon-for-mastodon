@@ -1,3 +1,13 @@
+<?php
+  #!/usr/bin/env php
+  ini_set("display_errors", On);
+  error_reporting(E_ALL);
+
+  require_once('../../authorize/Mastodon.php');
+  use HalcyonSuite\HalcyonForMastodon\Mastodon;
+  use Exception;
+?>
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -9,6 +19,7 @@
   <link rel="stylesheet" type="text/css" href="/login/assets/css/style.css" media="all" />
   <link rel="stylesheet" type="text/css" href="/assets/css/fonts.css" media="all" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="/assets/js/mastodon.js/mastodon.js"></script>
   <script src="/assets/js/jquery-cookie/src/jquery.cookie.js"></script>
 
   <script>
@@ -40,29 +51,27 @@
         <section class="description_wrap">
           <span class="description">
             Halcyon is standard Twitter like client of Mastodon, And you can use it just by login to your instance.<br/>
-            Let's Toot like a tweet.
+            Let's Toot like a tweet.<br />
+            <!--<span class="or_create">If you don't have any Mastodon account yet, you can <a href="https://joinmastodon.org/">create an account</a></span>-->
           </span>
         </section>
 
-        <form class="search_form box" action="auth.php" method="POST">
+        <form class="search_form box" method="POST">
 
-            <h2>(BETA) Login to Halcyon</h2>
-            <span class="or_create">or <a href="https://joinmastodon.org/">create an account</a></span>
+            <h2>Closing: re-open at 23:50 IST</h2>
 
             <span class="session_aleart invisible">
               <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
               <span></span>
             </span>
 
-            <input name="domain"   type="text" class="login_form_input" placeholder="Instance's domain" required/>
-            <input name="email"    type="text" class="login_form_input" placeholder="E-mail adress" required/>
-            <input name="password" type="password" class="login_form_input" placeholder="Password" required/>
+            <div class="input_wrap">
+              <input name="domain" type="text" class="login_form_input" placeholder="Instance's domain" required/><input type="submit" value=">"></input>
+            </div>
 
             <div class="login_form_agree">
               <input id="agree" type="checkbox" required checked/><label for="agree" >I agree with the </label><a href="/terms">Terms</a>
             </div>
-
-            <input type="submit" value="Login"></input>
 
         </form>
 
@@ -115,37 +124,44 @@
 
   </body>
 
-  <?php if (isset($_GET['cause'])): ?>
+  <?php if (isset($_POST['domain'])): ?>
+
+    <?php
+
+      preg_match('/(^https:\/\/.+?\.[a-z0-9-]+$)/', "https://".mb_strtolower($_POST['domain']), $URL);
+
+      $URL        = $URL[0];
+      $domain     = $_POST['domain'];
+
+      $api = new Mastodon();
+
+      // select instances
+      try {
+          $client_info = $api->getInstance($URL);
+      } catch (Exception $e) {
+          header('Location: https://halcyon.social/login?cause=domain', true, 303);
+          die();
+      }
+
+    ?>
+
     <script>
 
       $(function() {
 
-        var cause = "<?php echo $_GET['cause']; ?>"
+        const client_id = "<?php echo $client_info['client_id']; ?>",
+              URL       = "<?php echo $URL; ?>",
+              domain    = "<?php echo $domain; ?>";
+        api = new MastodonAPI({
+          instance: URL,
+        });
 
-        if ( cause === "domain" ) {
+        console.log(api.generateAuthLink(client_id, 'https://halcyon.social', 'code', ['read','write','follow']));
 
-          $('body main article input.login_form_input[name="domain"]').addClass('error');
-
-          $('.session_aleart').removeClass('invisible');
-          $('.session_aleart > span').text('The instance does not exsist.');
-
-        } else if ( cause === "login" ) {
-
-          $('body main article input.login_form_input[name="email"]').addClass('error');
-          $('body main article input.login_form_input[name="password"]').addClass('error');
-
-          $('.session_aleart').removeClass('invisible');
-          $('.session_aleart > span').text('The E-mail or password is invalid');
-
-        }
-
-      });
-
-      $(document).on('click','body main article input.login_form_input', function(e) {
-        $(this).removeClass('error');
       });
 
     </script>
+
   <?php endif; ?>
 
 </html>
