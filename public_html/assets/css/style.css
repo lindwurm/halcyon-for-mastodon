@@ -422,7 +422,7 @@ body {
 	flex-grow: 1;
 	display: flex;
 	align-items: center;
-	justify-content: end;
+	justify-content: flex-end;
 	height: 39px;
 }
 
@@ -794,6 +794,7 @@ body {
 .toot_entry {
 	cursor: pointer;
 	background-color: #fff;
+	list-style: none;
 }
 
 .toot_entry:hover {
