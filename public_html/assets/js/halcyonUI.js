@@ -1429,10 +1429,11 @@ function setTimeline(level,load_options) {
 
                 }
               } else if ( streaming_option === "auto" ) {
-                // Is alredy exist?
+                // Is not alredy exist
                 if ( !$('.toot_entry[sid="'+userstream.payload.id+'"]').length ) {
 
                     timeline_template(userstream.payload).prependTo("#js-timeline");
+                    replaceInternalLink();
                     replace_emoji();
 
                     //context
@@ -1441,6 +1442,7 @@ function setTimeline(level,load_options) {
                            let reply_source = userstream.payload.id;
                           api.get('statuses/'+userstream.payload.in_reply_to_id, function(in_reply_statuses) {
                             $("#js-timeline .toot_entry[sid='"+reply_source+"']").before(context_template(in_reply_statuses, 'ancestors_status default_padding'));
+                            replaceInternalLink();
                             replace_emoji();
                           });
                       }
