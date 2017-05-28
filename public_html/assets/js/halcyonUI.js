@@ -1,3 +1,224 @@
+/*-----------------------------------
+  Buttons
+-----------------------------------*/
+
+$(function() {
+
+  // PREFIX A
+  $(document).on('click','a', function(e) {
+      e.stopPropagation();
+  });
+
+  // PREFIX INPUT
+  $(document).on('keypress',"input.disallow_enter[type='text']", function(e) {
+    if((e.which == 13) || (e.keyCode == 13)){ return false; }
+  });
+
+  // FOLLOW
+  $(document).on('click','.follow_button', function(e) {
+
+      e.stopPropagation();
+
+      if ($(this).attr('mid') !== null) {
+        api.post('accounts/'+$(this).attr('mid')+'/follow', function (data) {
+        });
+      } else if ($(this).attr('data')!== null) {
+        api.post("follows", {uri:$(this).attr('data')}, function (data) {
+        });
+      }
+
+      $(this).toggleClass('follow_button');
+      $(this).toggleClass('following_button');
+      $(this).html('<span>Following</span>');
+
+      return false;
+  });
+
+  // FOLLOWING
+  $(document).on('click','.following_button', function(e) {
+
+      e.stopPropagation();
+
+      if ($(this).attr('mid') !== null) {
+        api.post('accounts/'+$(this).attr('mid')+'/unfollow', function (data) {
+        });
+      }
+      $(this).toggleClass('following_button');
+      $(this).toggleClass('follow_button');
+      $(this).html('<i class="fa fa-fw fa-user-plus"></i><span>Follow</span>');
+
+      return false;
+  });
+
+  // MUTE
+  $(document).on('click','.mute_button', function(e) {
+
+      if ($(this).attr('mid') !== null) {
+        api.post('accounts/'+$(this).attr('mid')+'/mute', function (data) {
+        });
+      }
+
+      putMessage("You'll no longer receive notifications from this user");
+      return false;
+  });
+
+  // UNMUTE
+  $(document).on('click','.muting_button', function(e) {
+
+      if($(this).attr('mid')!=null) {
+        api.post('accounts/'+$(this).attr('mid')+'/unmute', function (data) {
+        });
+      }
+      $(this).toggleClass('muting_button');
+      $(this).toggleClass('follow_button');
+      $(this).html('<i class="fa fa-fw fa-user-plus"></i><span>Follow</span>');
+
+      putMessage("Unmuted this user");
+      return false;
+  });
+
+  // BLOCK
+  $(document).on('click','.block_button', function(e) {
+
+    if ($(this).attr('mid') !== null) {
+      api.post('accounts/'+$(this).attr('mid')+'/block', function (data) {
+      });
+    }
+
+    putMessage("This user has been blocked");
+    return false;
+
+  });
+
+  // UNBLOCK
+  $(document).on('click','.blocking_button', function(e) {
+
+      e.stopPropagation();
+
+      if ($(this).attr('mid') !== null) {
+        api.post('accounts/'+$(this).attr('mid')+'/unblock', function (data) {
+        });
+      }
+      $(this).toggleClass('blocking_button');
+      $(this).toggleClass('follow_button');
+      $(this).html('<i class="fa fa-fw fa-user-plus"></i><span>Follow</span>');
+
+      putMessage("Unblocked this user");
+      return false;
+  });
+
+  // BOOST
+  $(document).on('click','.boost_button', function(e) {
+
+      e.stopPropagation();
+
+      if($(this).attr('reblogged') !== 'true'){
+        api.post("statuses/"+$(this).attr('tid')+"/reblog", function (data) {
+        });
+        $(this).attr('reblogged', "true");
+        $(this).toggleClass('active');
+      } else {
+        api.post("statuses/"+$(this).attr('tid')+"/unreblog", function (data) {
+        });
+        $(this).attr('reblogged', "hold");
+        $(this).toggleClass('active');
+        $(this).mouseout(function(e) {
+          $(this).attr('reblogged', "null");
+        });
+      }
+
+      return false;
+  });
+
+  // FAVOURITE
+  $(document).on('click','.fav_button', function(e) {
+
+      e.stopPropagation();
+
+      if($(this).attr('favourited') !== 'true'){
+        api.post("statuses/"+$(this).attr('tid')+"/favourite", function (data) {
+        });
+        $(this).attr('favourited', "true");
+        $(this).toggleClass('active');
+      } else {
+        api.post("statuses/"+$(this).attr('tid')+"/unfavourite", function (data) {
+        });
+        $(this).attr('favourited', "hold");
+        $(this).toggleClass('active');
+        $(this).mouseout(function(e) {
+          $(this).attr('favourited', "null");
+        });
+      }
+
+      return false;
+  });
+
+  // DELETE
+  $(document).on('click','.delete_button', function(e) {
+
+      const sid = $(this).attr('tid');
+
+      api.delete("statuses/"+sid, function (data) {
+        $('.toot_entry[sid="'+sid+'"]').remove();
+        putMessage("Your Toot has been deleted");
+      });
+
+  });
+
+  // CONTENTS WARNING
+  $(document).on('click','.cw_button', function(e) {
+
+      e.stopPropagation();
+
+      $(this).toggleClass('invisible');
+      $(this).parent().toggleClass('content_warning');
+
+      return false;
+  });
+
+  // NOT SAFE FOR WORK
+  $(document).on('click','.sensitive_alart', function(e) {
+
+      e.stopPropagation();
+
+      $(this).toggleClass('invisible');
+
+      return false;
+  });
+
+  // HEADER AVATAR BUTTON
+  $(document).on('click','.header_account_avatar', function(e) {
+      e.stopPropagation();
+      $(this).next('.header_my_account_nav').toggleClass('invisible');
+  });
+
+  // EXPAND TOOT MENU
+  $(document).on('click','.expand_button', function(e) {
+      e.stopPropagation();
+      $(this).next('.expand_menu').toggleClass('invisible');
+      return false;
+  });
+
+  // 連投防止
+  $(document).on('click','.status_form.ready .active_submit_button', function(e) {
+      e.stopImmediatePropagation()
+      return false;
+  });
+
+});
+
+/*-----------------------------------
+  Reset Buttons
+-----------------------------------*/
+
+$(function() {
+
+  $(document).on('click', function(e) {
+    $('.header_my_account_nav').addClass('invisible');
+    $('.expand_menu').addClass('invisible');
+  });
+
+})
 
 /*----------------------------------
   Get Media attachment UI
@@ -1665,12 +1886,23 @@ function setNotifications(load_options) {
 
   });
 
-  /*
   api.stream("user", function(userstream) {
-    if (userstream.event === "notifications") {
+    const original_title = $('title').text();
+
+    if (userstream.event === "notification") {
+
+      const streaming_option = localStorage.getItem("setting_post_stream");
+
+      if ( streaming_option === "manual" ) {
+        // todo
+      } else if ( streaming_option === "auto" ) {
+        notifications_template(userstream.payload).prependTo("#js-timeline");
+        replaceInternalLink();
+        replace_emoji();
+      }
 
     }
-  }*/
+  });
 
 }
 
@@ -2051,7 +2283,9 @@ $(function() {
   // TEXTAREA
   $(document).on('change keyup','#overlay_status_form textarea, #overlay_status_form .status_spoiler', function(e) {
 
-    if ( e.keyCode !== 224 & e.keyCode !== 17 & e.keyCode !== 13 ) {
+    if ( e.keyCode !== 224 & e.keyCode !== 17 & e.keyCode !== undefined ) {
+
+
 
       const textCount = $('#overlay_status_form textarea').val().length + $('#overlay_status_form .status_spoiler').val().length;
       let   textLen   = ( 500 - textCount );
@@ -2120,7 +2354,7 @@ $(function() {
   });
 
   // TOOT SUBMIT BUTTON
-  $(document).on('click','#overlay_status_form .active_submit_button', function(e) {
+  $(document).on('click','#overlay_status_form .submit_status_label', function(e) {
 
     $('#overlay_status_form').addClass('ready');
 
@@ -2224,7 +2458,7 @@ $(function() {
   // TEXTAREA
   $(document).on('change keyup','#header_status_form textarea, #header_status_form .status_spoiler', function(e) {
 
-    if ( e.keyCode !== 224 & e.keyCode !== 17 & e.keyCode !== 13 ) {
+    if ( e.keyCode !== 224 & e.keyCode !== 17 & e.keyCode !== undefined ) {
 
       const textCount = $('#header_status_form textarea').val().length + $('#header_status_form .status_spoiler').val().length;
       let   textLen   = ( 500 - textCount );
@@ -2304,7 +2538,7 @@ $(function() {
   });
 
   // TOOT SUBMIT BUTTON
-  $(document).on('click','#header_status_form .active_submit_button', function(e) {
+  $(document).on('click','#header_status_form .submit_status_label', function(e) {
 
     $('#header_status_form').addClass('ready');
 
@@ -2413,7 +2647,7 @@ $(function() {
   // TEXTAREA
   $(document).on('change keyup','#reply_status_form textarea, #reply_status_form .status_spoiler', function(e) {
 
-    if ( e.keyCode !== 224 & e.keyCode !== 17 & e.keyCode !== 13 ) {
+    if ( e.keyCode !== 224 & e.keyCode !== 17 & e.keyCode !== undefined ) {
 
       const textCount = $('#reply_status_form textarea').val().length + $('#reply_status_form .status_spoiler').val().length;
       let   textLen   = ( 500 - textCount );
@@ -2482,7 +2716,7 @@ $(function() {
   });
 
   // TOOT SUBMIT BUTTON
-  $(document).on('click','#reply_status_form .active_submit_button', function(e) {
+  $(document).on('click','#reply_status_form .submit_status_label', function(e) {
 
     $('#reply_status_form').addClass('ready');
 
@@ -2613,7 +2847,7 @@ $(function() {
   // TEXTAREA
   $(document).on('change keyup','#single_reply_status_form textarea, #single_reply_status_form .status_spoiler', function(e) {
 
-    if ( e.keyCode !== 224 & e.keyCode !== 17 & e.keyCode !== 13 ) {
+    if ( e.keyCode !== 224 & e.keyCode !== 17 & e.keyCode !== undefined ) {
 
       const textCount = $('#single_reply_status_form textarea').val().length + $('#single_reply_status_form .status_spoiler').val().length;
       let   textLen   = ( 500 - textCount );
@@ -2682,7 +2916,7 @@ $(function() {
   });
 
   // TOOT SUBMIT BUTTON
-  $(document).on('click','#single_reply_status_form .active_submit_button', function(e) {
+  $(document).on('click','#single_reply_status_form .submit_status_label', function(e) {
 
     $('#single_reply_status_form').addClass('ready');
 
@@ -2830,222 +3064,6 @@ $(function() {
         history.pushState(null, null, current_file);
     }
 
-  });
-
-})
-
-/*-----------------------------------
-  Buttons
------------------------------------*/
-
-$(function() {
-
-  // PREFIX A
-  $(document).on('click','a', function(e) {
-      e.stopPropagation();
-  });
-
-  // PREFIX INPUT
-  $(document).on('keypress',"input.disallow_enter[type='text']", function(e) {
-    if((e.which == 13) || (e.keyCode == 13)){ return false; }
-  });
-
-  // FOLLOW
-  $(document).on('click','.follow_button', function(e) {
-
-      e.stopPropagation();
-
-      if ($(this).attr('mid') !== null) {
-        api.post('accounts/'+$(this).attr('mid')+'/follow', function (data) {
-        });
-      } else if ($(this).attr('data')!== null) {
-        api.post("follows", {uri:$(this).attr('data')}, function (data) {
-        });
-      }
-
-      $(this).toggleClass('follow_button');
-      $(this).toggleClass('following_button');
-      $(this).html('<span>Following</span>');
-
-      return false;
-  });
-
-  // FOLLOWING
-  $(document).on('click','.following_button', function(e) {
-
-      e.stopPropagation();
-
-      if ($(this).attr('mid') !== null) {
-        api.post('accounts/'+$(this).attr('mid')+'/unfollow', function (data) {
-        });
-      }
-      $(this).toggleClass('following_button');
-      $(this).toggleClass('follow_button');
-      $(this).html('<i class="fa fa-fw fa-user-plus"></i><span>Follow</span>');
-
-      return false;
-  });
-
-  // MUTE
-  $(document).on('click','.mute_button', function(e) {
-
-      if ($(this).attr('mid') !== null) {
-        api.post('accounts/'+$(this).attr('mid')+'/mute', function (data) {
-        });
-      }
-
-      putMessage("You'll no longer receive notifications from this user");
-      return false;
-  });
-
-  // UNMUTE
-  $(document).on('click','.muting_button', function(e) {
-
-      if($(this).attr('mid')!=null) {
-        api.post('accounts/'+$(this).attr('mid')+'/unmute', function (data) {
-        });
-      }
-      $(this).toggleClass('muting_button');
-      $(this).toggleClass('follow_button');
-      $(this).html('<i class="fa fa-fw fa-user-plus"></i><span>Follow</span>');
-
-      putMessage("Unmuted this user");
-      return false;
-  });
-
-  // BLOCK
-  $(document).on('click','.block_button', function(e) {
-
-    if ($(this).attr('mid') !== null) {
-      api.post('accounts/'+$(this).attr('mid')+'/block', function (data) {
-      });
-    }
-
-    putMessage("This user has been blocked");
-    return false;
-
-  });
-
-  // UNBLOCK
-  $(document).on('click','.blocking_button', function(e) {
-
-      e.stopPropagation();
-
-      if ($(this).attr('mid') !== null) {
-        api.post('accounts/'+$(this).attr('mid')+'/unblock', function (data) {
-        });
-      }
-      $(this).toggleClass('blocking_button');
-      $(this).toggleClass('follow_button');
-      $(this).html('<i class="fa fa-fw fa-user-plus"></i><span>Follow</span>');
-
-      putMessage("Unblocked this user");
-      return false;
-  });
-
-  // BOOST
-  $(document).on('click','.boost_button', function(e) {
-
-      e.stopPropagation();
-
-      if($(this).attr('reblogged') !== 'true'){
-        api.post("statuses/"+$(this).attr('tid')+"/reblog", function (data) {
-        });
-        $(this).attr('reblogged', "true");
-        $(this).toggleClass('active');
-      } else {
-        api.post("statuses/"+$(this).attr('tid')+"/unreblog", function (data) {
-        });
-        $(this).attr('reblogged', "hold");
-        $(this).toggleClass('active');
-        $(this).mouseout(function(e) {
-          $(this).attr('reblogged', "null");
-        });
-      }
-
-      return false;
-  });
-
-  // FAVOURITE
-  $(document).on('click','.fav_button', function(e) {
-
-      e.stopPropagation();
-
-      if($(this).attr('favourited') !== 'true'){
-        api.post("statuses/"+$(this).attr('tid')+"/favourite", function (data) {
-        });
-        $(this).attr('favourited', "true");
-        $(this).toggleClass('active');
-      } else {
-        api.post("statuses/"+$(this).attr('tid')+"/unfavourite", function (data) {
-        });
-        $(this).attr('favourited', "hold");
-        $(this).toggleClass('active');
-        $(this).mouseout(function(e) {
-          $(this).attr('favourited', "null");
-        });
-      }
-
-      return false;
-  });
-
-  // DELETE
-  $(document).on('click','.delete_button', function(e) {
-
-      const sid = $(this).attr('tid');
-
-      api.delete("statuses/"+sid, function (data) {
-        $('.toot_entry[sid="'+sid+'"]').remove();
-        putMessage("Your Toot has been deleted");
-      });
-
-  });
-
-  // CONTENTS WARNING
-  $(document).on('click','.cw_button', function(e) {
-
-      e.stopPropagation();
-
-      $(this).toggleClass('invisible');
-      $(this).parent().toggleClass('content_warning');
-
-      return false;
-  });
-
-  // NOT SAFE FOR WORK
-  $(document).on('click','.sensitive_alart', function(e) {
-
-      e.stopPropagation();
-
-      $(this).toggleClass('invisible');
-
-      return false;
-  });
-
-  // HEADER AVATAR BUTTON
-  $(document).on('click','.header_account_avatar', function(e) {
-      e.stopPropagation();
-      $(this).next('.header_my_account_nav').toggleClass('invisible');
-  });
-
-  // EXPAND TOOT MENU
-  $(document).on('click','.expand_button', function(e) {
-      e.stopPropagation();
-      $(this).next('.expand_menu').toggleClass('invisible');
-      return false;
-  });
-
-});
-
-/*-----------------------------------
-  Reset Buttons
------------------------------------*/
-
-$(function() {
-
-  $(document).on('click', function(e) {
-    $('.header_my_account_nav').addClass('invisible');
-    $('.expand_menu').addClass('invisible');
   });
 
 })
