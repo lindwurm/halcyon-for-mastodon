@@ -1681,6 +1681,8 @@ function setTimeline(level,load_options) {
           $('#header .header_nav_list .'+scope+'_badge').addClass('invisible');
           $('#js-stream_update').css({'display':'none','height':'0','padding':'0px'});
 
+          statuses.reverse();
+
           for ( let i in statuses ) {
             timeline_template(statuses[i]).prependTo("#js-timeline");
             replace_emoji();
@@ -1956,6 +1958,8 @@ function setFollows(mid, param, load_options) {
           }
 
         });
+
+        load_options.shift();
 
       };
 
@@ -3053,7 +3057,11 @@ $(function() {
     $('#js-overlay_content_wrap .overlay_copy_link').addClass('invisible');
 
     // remove here
-    $('#js-overlay_content_wrap .overlay_status .submit_status_label').removeClass('active_submit_button');
+    $('#js-overlay_content_wrap .overlay_status      .submit_status_label').removeClass('active_submit_button');
+    $('#js-overlay_content_wrap .single_reply_status .submit_status_label').removeClass('active_submit_button');
+    $('#js-overlay_content_wrap #reply_status_form   .submit_status_label').removeClass('active_submit_button');
+    $('#js-overlay_content_wrap #header_status_form  .submit_status_label').removeClass('active_submit_button');
+
     $('#js-overlay_content_wrap').removeClass('black_05');
     $('#js-overlay_content_wrap').removeClass('black_08');
 
