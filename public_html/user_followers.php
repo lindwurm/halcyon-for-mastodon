@@ -65,7 +65,7 @@
     $(function() {
 
       // find by mid
-      const account_id = <?php echo $_GET['mid']; ?>;
+      const account_id = <?= htmlspecialchars((string)filter_input(INPUT_GET, 'mid'), ENT_QUOTES) ?>;
 
       api.get('accounts/'+account_id, function(AccountObj) {
 
@@ -91,7 +91,7 @@
         $url    = "https://$domain/@$name";
       ?>
 
-      const query = '<?php echo $url; ?>';
+      const query = '<?= htmlspecialchars((string)filter_input(INPUT_GET, 'url'), ENT_QUOTES) ?>';
 
       api.get('search', [{name:'q',data:query},{name:'resolve',data:'true'}], function(search) {
 
