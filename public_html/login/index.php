@@ -46,7 +46,7 @@
 
         <form class="search_form box" action="auth.php" method="POST">
 
-            <h2>(BETA) Login to Halcyon</h2>
+            <h2>Login to Halcyon</h2>
             <span class="or_create">or <a href="https://joinmastodon.org/">create an account</a></span>
 
             <span class="session_aleart invisible">
@@ -55,7 +55,7 @@
             </span>
 
             <input name="domain"   type="text" class="login_form_input" placeholder="Instance's domain" required/>
-            <input name="email"    type="text" class="login_form_input" placeholder="E-mail adress" required/>
+            <input name="email"    type="text" class="login_form_input" placeholder="Email adress" required/>
             <input name="password" type="password" class="login_form_input" placeholder="Password" required/>
 
             <div class="login_form_agree">
@@ -120,14 +120,14 @@
 
       $(function() {
 
-        var cause = "<?php echo $_GET['cause']; ?>"
+        var cause = "<?= htmlspecialchars((string)filter_input(INPUT_GET, 'cause'), ENT_QUOTES) ?>";
 
         if ( cause === "domain" ) {
 
           $('body main article input.login_form_input[name="domain"]').addClass('error');
 
           $('.session_aleart').removeClass('invisible');
-          $('.session_aleart > span').text('The instance does not exsist.');
+          $('.session_aleart > span').text('This instance does not exsist.');
 
         } else if ( cause === "login" ) {
 
@@ -135,7 +135,7 @@
           $('body main article input.login_form_input[name="password"]').addClass('error');
 
           $('.session_aleart').removeClass('invisible');
-          $('.session_aleart > span').text('The E-mail or password is invalid');
+          $('.session_aleart > span').text('This Email or password is invalid');
 
         }
 
