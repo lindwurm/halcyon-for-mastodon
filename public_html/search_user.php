@@ -36,8 +36,7 @@
   current_file = location.pathname;
 
   <?php if(isset($_GET['q'])): ?>
-
-    const query = "<?php echo $_GET['q']; ?>";
+    const query = "<?= htmlspecialchars((string)filter_input(INPUT_GET, 'q'), ENT_QUOTES) ?>";
     $('title').text(query+' - Halcyon Search');
     $('#js-search_title_box > h1').text(query);
     $('#js-search_nav_peoples').toggleClass('view');
