@@ -722,7 +722,7 @@ function notifications_template(NotificationObj) {
 
               <footer class="toot_footer">
                 <div class="toot_reaction">
-                  <button class="reply_button" tid="${NotificationObj.status.id}">
+                  <button class="reply_button" tid="${NotificationObj.status.id}" acct="@${NotificationObj.account.acct}" display_name="${NotificationObj.account.display_name}">
                     <i class="fa fa-fw fa-reply"></i>
                     <span class="reaction_count reply_count"></span>
                   </button>
@@ -3216,12 +3216,6 @@ $(function() {
 
     shortcut.add("Shift+n",function() {
         location.href="/notifications";
-    },{
-     "disable_in_input":true,
-    });
-
-    shortcut.add("Shift+p",function() {
-        location.href="/"+current_id;
     },{
      "disable_in_input":true,
     });
