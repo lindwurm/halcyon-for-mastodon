@@ -55,7 +55,7 @@
 
     $(function() {
       // find by mid
-      const query = "<?php echo $_GET['q']; ?>";
+      const query = "<?= htmlspecialchars((string)filter_input(INPUT_GET, 'q'), ENT_QUOTES) ?>";
       $('#main > .article_wrap > .center_column > .timeline_header > .header_items > .item').text("#"+query);
       $('#js-search_title_box > h1').text(query);
       $('title').text('#'+query+' - Halcyon Search');
