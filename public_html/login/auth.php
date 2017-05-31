@@ -7,9 +7,12 @@
   use HalcyonSuite\HalcyonForMastodon\Mastodon;
   use Exception;
 
-  preg_match('/(^https:\/\/.+?\.[a-z0-9-]+$)/', "https://".mb_strtolower($_POST['domain']), $URL);
+  if ( !preg_match('/(^[a-z0-9\-\.\/]+?\.[a-z0-9-]+$)/', mb_strtolower($_POST['domain'])) ) {
+    header('Location: https://halcyon.social/login?cause=domain', true, 303);
+    die();
+  }
 
-  $URL        = $URL[0];
+  $URL        = "https://".$_POST['domain'];
   $domain     = $_POST['domain'];
   $email      = $_POST['email'];
   $password   = $_POST['password'];
