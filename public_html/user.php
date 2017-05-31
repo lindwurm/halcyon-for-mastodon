@@ -130,7 +130,7 @@
         $url    = "https://$domain/@$name";
       ?>
 
-      const query = '<?= htmlspecialchars((string)filter_input(INPUT_GET, 'url'), ENT_QUOTES) ?>';
+      const query = '<?= htmlspecialchars((string)filter_input(INPUT_GET, 'user'), ENT_QUOTES) ?>';
       api.get('search', [{name:'q',data:query},{name:'resolve',data:'true'}], function(search) {
 
         if ( !search.accounts.length ) {
