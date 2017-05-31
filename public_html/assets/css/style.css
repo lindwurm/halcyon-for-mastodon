@@ -1098,7 +1098,7 @@ body {
 }
 
 .media_views[media_length="2"] .media_attachment[mediacount="0"] {
-	padding-right: 5px;
+	padding-right: 1px;
 	box-sizing: border-box;
 }
 
@@ -1114,7 +1114,7 @@ body {
 .media_views[media_length="3"] .media_attachment[mediacount="0"],
 .media_views[media_length="4"] .media_attachment[mediacount="0"] {
 	flex-grow: 2;
-	padding-right: 5px;
+	padding-right: 1px;
 	box-sizing: border-box;
 }
 
@@ -1128,7 +1128,7 @@ body {
 }
 
 .media_views[media_length="3"] .media_attachments_right .media_attachment {
-	padding-bottom: 5px;
+	padding-bottom: 1px;
 	box-sizing: border-box;
 	height: 50%;
 }
@@ -1141,7 +1141,7 @@ body {
   4
 ----------------*/
 .media_views[media_length="4"] .media_attachments_right .media_attachment {
-	padding-bottom: 5px;
+	padding-bottom: 1px;
 	box-sizing: border-box;
 	height: calc( 100% / 3 );
 }
