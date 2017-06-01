@@ -8,3 +8,4 @@
 - Multi account
 - Native profile edit
 - Support responsive
+- Dark theme
