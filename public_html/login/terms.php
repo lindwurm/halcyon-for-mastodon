@@ -46,7 +46,7 @@
 <p>Halcyon uses <a href="https://www.google.com/analytics/">Google Analytics</a> to record and analyze statistics of usage. It stores cookies in the browser storage for this purpose. However, this can be disabled by browser setting.</p>
 <br/>
 <h2>4. Account</h2>
-<p>Users can connect to various Mastodon accounts from Halcyon, and Halcyon will not interfere with those connection. As an exception, passwords and access keys will be cached temporarily and deleted after 24 hours.</p>
+<p>Users can connect to various Mastodon accounts from Halcyon, and Halcyon will not interfere with those connection.</p>
 <br/>
 <h2>5. Content</h2>
 <p>Halcyon does not own the right to or hold responsibility for any text, image, animation, audio content accessible from Halcyon. The right and responsibility belong to the owners of instances that host those content.</p>
