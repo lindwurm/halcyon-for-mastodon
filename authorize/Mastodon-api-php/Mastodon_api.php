@@ -331,6 +331,7 @@ class Mastodon_api {
 		$parameters['client_secret'] = $cliend_secret;
 		$parameters['redirect_uri'] = $redirect_uri;
 		$parameters['grant_type'] = "authorization_code";
+		$parameters['code'] = $code;
 		$response = $this->_post('/oauth/token',$parameters);
 		return $response;
 	}
