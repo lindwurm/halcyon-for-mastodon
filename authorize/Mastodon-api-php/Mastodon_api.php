@@ -325,6 +325,16 @@ class Mastodon_api {
 		return $response;
 	}
 
+	public function get_access_token ($client_id, $cliend_secret, $redirect_uri, $code) {
+		$parameters = array();
+		$parameters['client_id'] = $client_id;
+		$parameters['client_secret'] = $cliend_secret;
+		$parameters['redirect_uri'] = $redirect_uri;
+		$parameters['grant_type'] = "authorization_code";
+		$response = $this->_post('/oauth/token',$parameters);
+		return $response;
+	}
+
 	/**
 	 * accounts
 	 *
@@ -949,4 +959,5 @@ class Mastodon_api {
 		$response = $this->_get('/api/v1/timelines/tag/'.$hashtag,$parameters);
 		return $response;
 	}
+
 }
