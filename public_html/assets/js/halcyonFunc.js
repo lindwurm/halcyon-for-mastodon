@@ -1548,7 +1548,7 @@ function setTimeline(level,load_options) {
       if (statuses[i].in_reply_to_id && level === "timelines/home" | level === "timelines/public" ) {
 
         // 同じ返信先が無い場合
-        if (!reply_sources[statuses[i].in_reply_to_id]) {
+        if (!reply_sources[statuses[i].in_reply_to_id] & !$(".toot_entry[sid='"+statuses[i].in_reply_to_id+"']").length ) {
           reply_sources[statuses[i].in_reply_to_id] = statuses[i].id;
           api.get('statuses/'+statuses[i].in_reply_to_id, function(in_reply_statuses) {
             $("#js-timeline .toot_entry[sid='"+reply_sources[in_reply_statuses.id]+"']").before(context_template(in_reply_statuses, 'ancestors_status default_padding'));
@@ -1593,7 +1593,7 @@ function setTimeline(level,load_options) {
               timeline_template(statuses[i]).appendTo("#js-timeline");
 
               if (statuses[i].in_reply_to_id && level === "timelines/home" | level === "timelines/public" ) {
-                if (!reply_sources[statuses[i].in_reply_to_id]) {
+                if (!reply_sources[statuses[i].in_reply_to_id] & !$(".toot_entry[sid='"+statuses[i].in_reply_to_id+"']").length) {
                   reply_sources[statuses[i].in_reply_to_id] = statuses[i].id;
                   api.get('statuses/'+statuses[i].in_reply_to_id, function(in_reply_statuses) {
                     $("#js-timeline .toot_entry[sid='"+reply_sources[in_reply_statuses.id]+"']").before(context_template(in_reply_statuses, 'ancestors_status default_padding'));
@@ -1672,7 +1672,7 @@ function setTimeline(level,load_options) {
 
                     //context
                     if ( level === "timelines/home" | level === "timelines/public" ) {
-                      if (userstream.payload.in_reply_to_id) {
+                      if (userstream.payload.in_reply_to_id & !$(".toot_entry[sid='"+statuses[i].in_reply_to_id+"']").length) {
                            let reply_source = userstream.payload.id;
                           api.get('statuses/'+userstream.payload.in_reply_to_id, function(in_reply_statuses) {
                             $("#js-timeline .toot_entry[sid='"+reply_source+"']").before(context_template(in_reply_statuses, 'ancestors_status default_padding'));
